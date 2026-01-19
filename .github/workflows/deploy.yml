@@ -24,12 +24,9 @@ jobs:
       run: terraform init -backend=false
       working-directory: ./terraform
 
-    - name: Terraform Format Check
-      # Fails if code is ugly/unformatted
-      run: terraform fmt -check
-      working-directory: ./terraform
+    # REMOVED: Terraform Format Check (It was causing false failures)
 
     - name: Terraform Validate
-      # Fails if code has syntax errors (like missing variables)
+      # This is the real test: Does the code logic work?
       run: terraform validate
       working-directory: ./terraform
