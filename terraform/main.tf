@@ -1,4 +1,4 @@
-# AWS INFRASTRUCTURE DEFINITION
+# ☁️ AWS INFRASTRUCTURE DEFINITION
 # Provisions a Production-Ready Docker Swarm Manager Node
 
 provider "aws" {
@@ -20,7 +20,18 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.transit_vpc.id
 }
 
-# 3. Security Group (The Firewall)
+# 3. Subnet (The specific lane in the network - WAS MISSING)
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.transit_vpc.id
+  cidr_block              = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  availability_zone       = "af-south-1a"
+  tags = {
+    Name = "Public Subnet"
+  }
+}
+
+# 4. Security Group (The Firewall)
 resource "aws_security_group" "swarm_sg" {
   name        = "transit-swarm-sg"
   description = "Allow Web Traffic and Swarm Management"
@@ -58,7 +69,7 @@ resource "aws_security_group" "swarm_sg" {
   }
 }
 
-# 4. EC2 Instance (The Server)
+# 5. EC2 Instance (The Server)
 resource "aws_instance" "swarm_manager" {
   ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
   instance_type = "t3.micro"
