@@ -49,15 +49,3 @@ docker stack deploy -c docker-compose.yml transit_stack
 
 ```
 
-```
-
-### **Final Status**
-Your repo will now have:
-* `terraform/main.tf` (The AWS proof)
-* `.github/workflows/deploy.yml` (The Automation proof)
-* `docker-compose.yml` (The Container proof - already there)
-* `README.md` (The Diagram)
-
-**Do this now.** This repo is the key to proving the "DevOps" skills listed on your resume.
-
-```
