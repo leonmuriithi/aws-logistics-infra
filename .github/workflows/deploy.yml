@@ -1,4 +1,4 @@
-name: Deploy Infrastructure
+name: Infrastructure Integrity Check
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  terraform:
-    name: 'Terraform Provisioning'
+  terraform-check:
+    name: 'Validate IaC Code'
     runs-on: ubuntu-latest
     
     steps:
@@ -20,12 +20,16 @@ jobs:
         terraform_version: 1.5.0
 
     - name: Terraform Init
-      run: terraform init
+      # Initialize backend without asking for cloud credentials
+      run: terraform init -backend=false
       working-directory: ./terraform
 
-    - name: Terraform Plan
-      run: terraform plan -input=false
+    - name: Terraform Format Check
+      # Fails if code is ugly/unformatted
+      run: terraform fmt -check
       working-directory: ./terraform
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Terraform Validate
+      # Fails if code has syntax errors (like missing variables)
+      run: terraform validate
+      working-directory: ./terraform
